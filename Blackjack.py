@@ -137,52 +137,54 @@ while game_continue:
 
     print("Game Starting...")
 
-    # Initialises and shuffles the deck of cards
+    # Creates a new deck of cards then shuffles it
     deck = Deck()
     deck.shuffle_deck()
 
-    # Initialises the player's hand and deals him two cards
+    # Creates Player 1
     player_hand = Player()
     player_hand.new_card(deck.deal_card())
     player_hand.new_card(deck.deal_card())
 
-    # Initialises the dealer's hand and deals him two cards
+    # Creates the dealer
     dealer_hand = Player()
     dealer_hand.new_card(deck.deal_card())
     dealer_hand.new_card(deck.deal_card())
 
-    player_chips = Chips()  # Initialises the player's chips
-    place_bet(player_chips)  # Allows the player to place a bet
+    # Creates the player's chips (plan to integrate it into Player instance soon)
+    player_chips = Chips()
+    place_bet(player_chips)
 
-    show_one(player_hand, dealer_hand)  # Shows one card of the dealer's and both of the players
+    # Shows one card of the dealer's cards but both of the player's
+    show_one(player_hand, dealer_hand)
 
-    # While the player is playing (i.e. he is still hitting)
+    # While the player is is still hitting
     while playing:
 
-        # Take the player's choice on what to do
+        # Obtain user input on how to proceed
         hit_or_stand(deck, player_hand)
 
-        # Show one hand of the dealer and all of the player
+        # Shows one card of the dealer's cards but both of the player's
         show_one(player_hand, dealer_hand)
 
-        if player_hand.value > 21:  # If the player busts
+        # Will run if the player has bust
+        if player_hand.value > 21:
 
             player_busts(player_chips)
-            break  # Break the current while loop and go to the end of the game
+            break
 
-    # If the player decided to stand (i.e. he didn't bust)
-    # This section only runs if the player is still in the game (stood and did not bust)
+    # If the player wants to stand
+    # This block runs if the player stands
     if player_hand.value <= 21:
 
-        # As long as the dealer has not hit 17 yet, keep hitting (Dealer's turn now)
         while dealer_hand.value < 17:
 
             hit(deck, dealer_hand)
 
-        # Once the dealer is also finished, show down
+        # This will run when either the dealer has bust or the value of his cards have exceeded 17
         show_all(player_hand, dealer_hand)
 
-        # Figure out who is the winner and what the outcome of the game is
+        # Determine winner
         if dealer_hand.value > 21:
 
             dealer_busts(player_chips)
@@ -204,13 +206,12 @@ while game_continue:
 
     if new_game == "Y":
 
-        # Resets playing in case the player stood in the last round
-        # This ensures that the actual game play part can happen because hit or stand makes it false if stand was chosen
+        # If the player chooses to play again
         playing = True
 
-    # If the player wants to stop
+    # If the player chooses to quit
     else:
+        
         print("Thank you for playing!")
 
-        # This sets the main game boolean to be false, hence breaking out of the main lop
         game_continue = False
